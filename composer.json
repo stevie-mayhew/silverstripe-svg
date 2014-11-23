@@ -3,6 +3,7 @@
     "type": "silverstripe-module",
     "description": "Basic SVG support for SilverStripe",
     "keywords": ["silverstripe", "svg", "template"],
+    "license": "MIT",
     "authors": [
         {
             "name": "Stevie Mayhew",
