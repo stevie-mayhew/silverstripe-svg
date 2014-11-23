@@ -1,0 +1,15 @@
+{
+    "name": "stevie-mayhew/silverstripe-svg",
+    "type": "silverstripe-module",
+    "description": "Basic SVG support for SilverStripe",
+    "keywords": ["silverstripe", "svg", "template"],
+    "authors": [
+        {
+            "name": "Stevie Mayhew",
+            "email": "stevie@stevie.co.nz"
+        }
+    ],
+    "require": {
+        "silverstripe-framework": "~3.1"
+    }
+}
