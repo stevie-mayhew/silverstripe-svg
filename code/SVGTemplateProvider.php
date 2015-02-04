@@ -18,11 +18,12 @@ class SVGTemplateProvider implements TemplateGlobalProvider
 
     /**
      * @param $path
+     * @param $id
      * @return SVGTemplate
      */
-    public static function SVG($path)
+    public static function SVG($path, $id = false)
     {
-        return new SVGTemplate($path);
+        return new SVGTemplate($path, $id);
     }
 
 }
