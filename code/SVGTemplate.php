@@ -12,33 +12,39 @@ class SVGTemplate extends ViewableData
      * @var string
      */
     private static $base_path = 'mysite/svg/';
+
     /**
      * @config
      * @var string
      */
     private static $extension = 'svg';
+
     /**
      * @config
      * @var array
      */
     private static $default_extra_classes = array();
-    /**
+
     /**
      * @var string
      */
     private $path;
+
     /**
      * @var string
      */
     private $fill;
+
     /**
      * @var string
      */
     private $width;
+
     /**
      * @var string
      */
     private $height;
+
     /**
      * @var array
      */
@@ -97,7 +103,6 @@ class SVGTemplate extends ViewableData
     {
         $this->width($width);
         $this->height($height);
-
         return $this;
     }
 
@@ -110,7 +115,6 @@ class SVGTemplate extends ViewableData
         $this->extra_classes[] = $class;
         return $this;
     }
-
 
     /**
      * @param $filePath
