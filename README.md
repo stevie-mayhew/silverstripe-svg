@@ -20,6 +20,7 @@ SVGTemplate:
 ```
 
 ## Usage
+In a SilverStripe template simply call the SVG template helper.
 
 ```html
 <!-- add svg -->
@@ -27,6 +28,31 @@ SVGTemplate:
 <!-- add svg with id 'testid' -->
 {$SVG('with-id', 'testid')}
 ```
+
+There also helper functions for width, height, size, fill and adding extra classes.
+```
+<!-- change width -->
+{$SVG('name').width(200)}
+
+<!-- change height -->
+{$SVG('name').height(200)}
+
+<!-- change size (width and height) -->
+{$SVG('name').size(100,100)}
+
+<!-- change fill -->
+{$SVG('name').width('#FF9933')}
+
+<!-- add class -->
+{$SVG('name').extraClass('awesome-svg')}
+```
+
+These options are also chainable.
+
+```
+{$SVG('name').fill('#45FABD').width(200).height(100).extraClass('awesome-svg')}
+```
+
 ### Example Output
 ```html
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="248.5 0 464.8 560" enable-background="new 248.5 0 464.8 560" class="svg-name"><path d="M550.9 0H248.5v560h464.8V154.9L550.9 0zM648 149.3H534.1V41.1L648 149.3zm22.4 369.6H289.6V41.1h205.3v149.3h177.3v328.5h-1.8zM343.7 272.5h272.5v41.1H343.7zM343.7 369.6h272.5v41.1H343.7z"></path></svg>

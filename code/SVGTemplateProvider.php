@@ -5,7 +5,6 @@
  */
 class SVGTemplateProvider implements TemplateGlobalProvider
 {
-
     /**
      * @return array
      */
