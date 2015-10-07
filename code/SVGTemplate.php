@@ -110,6 +110,11 @@ class SVGTemplate extends ViewableData
      * @param $class
      * @return $this
      */
+
+    /**
+     * @param $class
+     * @return $this
+     */
     public function extraClass($class)
     {
         $this->extra_classes[] = $class;
@@ -124,6 +129,10 @@ class SVGTemplate extends ViewableData
     {
         $out = new DOMDocument();
         $out->load($filePath);
+
+        if (!is_object($out) || !is_object($out->documentElement)) {
+            return false;
+        }
 
         $root = $out->documentElement;
         if ($this->fill) {
@@ -167,5 +176,6 @@ class SVGTemplate extends ViewableData
             '.' . $this->stat('extension');
 
         return $this->process($path);
+
     }
 }
