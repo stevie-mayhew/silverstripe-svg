@@ -154,6 +154,11 @@ class SVGTemplate extends ViewableData
     private function process($filePath)
     {
         $out = new DOMDocument();
+
+        if (!file_exists($filePath)) {
+            return false;
+        }
+
         $out->load($filePath);
 
         if (!is_object($out) || !is_object($out->documentElement)) {
