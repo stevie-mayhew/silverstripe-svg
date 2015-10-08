@@ -48,7 +48,7 @@ class SVGTemplate extends ViewableData
     /**
      * @var string
      */
-    private $custom_base;
+    private $custom_base_path;
 
     /**
      * @var array
@@ -123,7 +123,7 @@ class SVGTemplate extends ViewableData
      */
     public function customBasePath($path)
     {
-        $this->custom_base = trim($path, DIRECTORY_SEPARATOR);
+        $this->custom_base_path = trim($path, DIRECTORY_SEPARATOR);
         return $this;
     }    
 
@@ -203,7 +203,7 @@ class SVGTemplate extends ViewableData
     {
 
         $path = BASE_PATH . DIRECTORY_SEPARATOR;
-        $path .= ($this->custom_base) ? $this->custom_base : $this->stat('base_path');
+        $path .= ($this->custom_base_path) ? $this->custom_base_path : $this->stat('base_path');
         $path .= DIRECTORY_SEPARATOR;
         foreach($this->subfolders as $subfolder) {
             $path .= $subfolder . DIRECTORY_SEPARATOR;
