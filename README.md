@@ -29,7 +29,7 @@ In a SilverStripe template simply call the SVG template helper.
 {$SVG('with-id', 'testid')}
 ```
 
-There also helper functions for width, height, size, fill and adding extra classes.
+There also helper functions for width, height, size, fill, adding extra classes, setting a custom/alternative base path and specifying a sub-folder within the base path (for those who want to categories and folder off your images).
 ```html
 <!-- change width -->
 {$SVG('name').width(200)}
@@ -45,12 +45,21 @@ There also helper functions for width, height, size, fill and adding extra class
 
 <!-- add class -->
 {$SVG('name').extraClass('awesome-svg')}
+
+<!-- specify a custom base path -->
+{$SVG('name').customBasePath('assets/Uploads/SVG')}
+
+<!-- specify a sub-folder of the base path (can be called multiple times) -->
+{$SVG('name').addSubfolder('MyDir')}
+{$SVG('name').addSubfolder('MyDir/MyOtherDir')}
+{$SVG('name').addSubfolder('MyDir').addSubfolder('MyOtherDir')}
+
 ```
 
 These options are also chainable.
 
 ```html
-{$SVG('name').fill('#45FABD').width(200).height(100).extraClass('awesome-svg')}
+{$SVG('name').fill('#45FABD').width(200).height(100).extraClass('awesome-svg').customBasePath('assets/Uploads/SVG').addSubfolder('MyDir')}
 ```
 
 ### Example Output

@@ -46,9 +46,19 @@ class SVGTemplate extends ViewableData
     private $height;
 
     /**
+     * @var string
+     */
+    private $custom_base_path;
+
+    /**
      * @var array
      */
     private $extraClasses;
+
+    /**
+     * @var array
+     */
+    private $subfolders;
 
     /**
      * @param string $name
@@ -60,6 +70,7 @@ class SVGTemplate extends ViewableData
         $this->id = $id;
         $this->extra_classes = $this->stat('default_extra_classes');
         $this->extra_classes[] = 'svg-'.$this->name;
+        $this->subfolders = array();
         $this->out = new DOMDocument();
         $this->out->formatOutput = true;
     }
@@ -110,9 +121,29 @@ class SVGTemplate extends ViewableData
      * @param $class
      * @return $this
      */
+    public function customBasePath($path)
+    {
+        $this->custom_base_path = trim($path, DIRECTORY_SEPARATOR);
+        return $this;
+    }    
+
+    /**
+     * @param $class
+     * @return $this
+     */
     public function extraClass($class)
     {
         $this->extra_classes[] = $class;
+        return $this;
+    }
+
+    /**
+     * @param $class
+     * @return $this
+     */
+    public function addSubfolder($folder)
+    {
+        $this->subfolders[] = trim($folder, DIRECTORY_SEPARATOR);
         return $this;
     }
 
@@ -122,8 +153,17 @@ class SVGTemplate extends ViewableData
      */
     private function process($filePath)
     {
+
+        if (!file_exists($filePath)) {
+            return false;
+        }
+        
         $out = new DOMDocument();
         $out->load($filePath);
+
+        if (!is_object($out) || !is_object($out->documentElement)) {
+            return false;
+        }
 
         $root = $out->documentElement;
         if ($this->fill) {
@@ -161,11 +201,16 @@ class SVGTemplate extends ViewableData
      */
     public function forTemplate()
     {
-        $path = BASE_PATH . DIRECTORY_SEPARATOR .
-            $this->stat('base_path') . DIRECTORY_SEPARATOR .
-            $this->name .
-            '.' . $this->stat('extension');
+
+        $path = BASE_PATH . DIRECTORY_SEPARATOR;
+        $path .= ($this->custom_base_path) ? $this->custom_base_path : $this->stat('base_path');
+        $path .= DIRECTORY_SEPARATOR;
+        foreach($this->subfolders as $subfolder) {
+            $path .= $subfolder . DIRECTORY_SEPARATOR;
+        }
+        $path .= (strpos($this->name, ".") === false) ? $this->name . '.' . $this->stat('extension') : $this->name;
 
         return $this->process($path);
+
     }
 }
