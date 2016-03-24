@@ -41,7 +41,7 @@ There also helper functions for width, height, size, fill, adding extra classes,
 {$SVG('name').size(100,100)}
 
 <!-- change fill -->
-{$SVG('name').width('#FF9933')}
+{$SVG('name').fill('#FF9933')}
 
 <!-- add class -->
 {$SVG('name').extraClass('awesome-svg')}
