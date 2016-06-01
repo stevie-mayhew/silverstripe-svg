@@ -38,6 +38,11 @@ class SVGTemplate extends ViewableData
     /**
      * @var string
      */
+    private $stroke;
+
+    /**
+     * @var string
+     */
     private $width;
 
     /**
@@ -86,6 +91,16 @@ class SVGTemplate extends ViewableData
     }
 
     /**
+     * @param $color
+     * @return $this
+     */
+    public function stroke($color)
+    {
+        $this->stroke = $color;
+        return $this;
+    }
+
+    /**
      * @param $width
      * @return $this
      */
@@ -125,7 +140,7 @@ class SVGTemplate extends ViewableData
     {
         $this->custom_base_path = trim($path, DIRECTORY_SEPARATOR);
         return $this;
-    }    
+    }
 
     /**
      * @param $class
@@ -157,7 +172,7 @@ class SVGTemplate extends ViewableData
         if (!file_exists($filePath)) {
             return false;
         }
-        
+
         $out = new DOMDocument();
         $out->load($filePath);
 
@@ -168,6 +183,10 @@ class SVGTemplate extends ViewableData
         $root = $out->documentElement;
         if ($this->fill) {
             $root->setAttribute('fill', $this->fill);
+        }
+
+        if ($this->stroke) {
+            $root->setAttribute('stroke', $this->stroke);
         }
 
         if ($this->width) {

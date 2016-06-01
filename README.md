@@ -43,6 +43,9 @@ There also helper functions for width, height, size, fill, adding extra classes,
 <!-- change fill -->
 {$SVG('name').fill('#FF9933')}
 
+<!-- change stroke -->
+{$SVG('name').stroke('#FF9933')}
+
 <!-- add class -->
 {$SVG('name').extraClass('awesome-svg')}
 
