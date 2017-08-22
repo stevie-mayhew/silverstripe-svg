@@ -1,5 +1,10 @@
 <?php
 
+namespace StevieMayhew\SilverStripeSVG;
+
+use DOMDocument;
+use SilverStripe\View\ViewableData;
+
 /**
  * Class SVGTemplate
  */
