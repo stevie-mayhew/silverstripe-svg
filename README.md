@@ -3,10 +3,10 @@
 Basic SVG support for SilverStripe templates
 
 ## Requirements
-SilverStripe 3.1 or higher
+SilverStripe 4 or higher
 
 ## Installation
-```composer require stevie-mayhew/silverstripe-svg:1.0.*```
+```composer require stevie-mayhew/silverstripe-svg```
 
 ## Configuration
 

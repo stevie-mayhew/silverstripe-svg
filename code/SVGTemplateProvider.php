@@ -1,5 +1,9 @@
 <?php
 
+namespace StevieMayhew\SilverStripeSVG;
+
+use SilverStripe\View\TemplateGlobalProvider;
+
 /**
  * Class SVGTemplateProvider
  */
