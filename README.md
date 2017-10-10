@@ -13,7 +13,7 @@ SilverStripe 4 or higher
 You can set the base path for where your SVG's are stored. You can also add extra default classes to the SVG output
 
 ```yml
-SVGTemplate:
+StevieMayhew\SilverStripeSVG\SVGTemplate:
   base_path: 'themes/base/production/svg/'
   default_extra_classes:
     - 'svg-image'
