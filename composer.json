@@ -1,6 +1,6 @@
 {
     "name": "stevie-mayhew/silverstripe-svg",
-    "type": "silverstripe-module",
+    "type": "silverstripe-vendormodule",
     "description": "Basic SVG support for SilverStripe",
     "keywords": ["silverstripe", "svg", "template"],
     "license": "MIT",
