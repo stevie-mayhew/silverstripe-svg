@@ -195,11 +195,11 @@ class SVGTemplate extends ViewableData
         }
 
         if ($this->width) {
-            $root->setAttribute('width',  $this->width . 'px');
+            $root->setAttribute('width', $this->width);
         }
 
         if ($this->height) {
-            $root->setAttribute('height', $this->height . 'px');
+            $root->setAttribute('height', $this->height);
         }
 
         if ($this->extra_classes) {
