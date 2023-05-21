@@ -78,7 +78,7 @@ class SVGTemplate extends ViewableData
     {
         $this->name = $name;
         $this->id = $id;
-        $this->extra_classes = $this->stat('default_extra_classes');
+        $this->extra_classes = $this->config()->get('default_extra_classes');
         $this->extra_classes[] = 'svg-'.$this->name;
         $this->subfolders = array();
         $this->out = new DOMDocument();
