@@ -63,12 +63,19 @@ class SVGTemplate extends ViewableData
     /**
      * @var array
      */
-    private $extraClasses;
+    private $extra_classes = [];
 
     /**
      * @var array
      */
     private $subfolders;
+
+    private $name;
+
+    private $id;
+
+    private $out;
+
 
     /**
      * @param string $name
@@ -78,7 +85,7 @@ class SVGTemplate extends ViewableData
     {
         $this->name = $name;
         $this->id = $id;
-        $this->extra_classes = $this->config()->get('default_extra_classes');
+        $this->extra_classes = $this->config()->get('default_extra_classes') ?: [];
         $this->extra_classes[] = 'svg-'.$this->name;
         $this->subfolders = array();
         $this->out = new DOMDocument();
@@ -227,12 +234,12 @@ class SVGTemplate extends ViewableData
     {
 
         $path = BASE_PATH . DIRECTORY_SEPARATOR;
-        $path .= ($this->custom_base_path) ? $this->custom_base_path : $this->stat('base_path');
+        $path .= ($this->custom_base_path) ? $this->custom_base_path : $this->config()->get('base_path');
         $path .= DIRECTORY_SEPARATOR;
         foreach($this->subfolders as $subfolder) {
             $path .= $subfolder . DIRECTORY_SEPARATOR;
         }
-        $path .= (strpos($this->name, ".") === false) ? $this->name . '.' . $this->stat('extension') : $this->name;
+        $path .= (strpos($this->name, ".") === false) ? $this->name . '.' . $this->config()->get('extension') : $this->name;
 
         return $this->process($path);
 
