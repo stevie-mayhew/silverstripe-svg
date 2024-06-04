@@ -3,6 +3,10 @@
 namespace StevieMayhew\SilverStripeSVG;
 
 use DOMDocument;
+use Psr\Log\LoggerInterface;
+use SilverStripe\Control\Controller;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\View\ViewableData;
 
 /**
@@ -28,7 +32,7 @@ class SVGTemplate extends ViewableData
      * @config
      * @var array
      */
-    private static $default_extra_classes = array();
+    private static $default_extra_classes = [];
 
     /**
      * @var string
@@ -86,7 +90,7 @@ class SVGTemplate extends ViewableData
         $this->name = $name;
         $this->id = $id;
         $this->extra_classes = $this->config()->get('default_extra_classes') ?: [];
-        $this->extra_classes[] = 'svg-'.$this->name;
+        $this->extra_classes[] = 'svg-' . $this->name;
         $this->subfolders = array();
         $this->out = new DOMDocument();
         $this->out->formatOutput = true;
@@ -174,21 +178,48 @@ class SVGTemplate extends ViewableData
         return $this;
     }
 
+
+    public function isRemoteSvg(): bool
+    {
+        if (strpos($this->name, 'https://') === 0 || strpos($this->name, 'http://') === 0 || strpos($this->name, 'data:image') === 0) {
+            return true;
+        }
+
+        return false;
+    }
+
+
     /**
      * @param $filePath
      * @return string
      */
     private function process($filePath)
     {
+        $this->extend('onBeforeProcess', $filePath);
 
-        if (!file_exists($filePath)) {
+        if (!$this->isRemoteSvg() && !file_exists($filePath)) {
+            Injector::inst()->get(LoggerInterface::class)->warning('SVG file not found: ' . $filePath);
+
             return false;
+        }
+
+        if ($this->isRemoteSvg()) {
+            // check to see if it exists locally in TEMP_PATH
+            $localPath = TEMP_PATH . DIRECTORY_SEPARATOR . md5($filePath) . '.' . $this->config()->get('extension');
+            if (file_exists($localPath) && !isset($_GET['flush'])) {
+                $filePath = $localPath;
+            } else {
+                $svg = file_get_contents($filePath);
+                file_put_contents($localPath, $svg);
+                $filePath = $localPath;
+            }
         }
 
         $out = new DOMDocument();
         $out->load($filePath);
 
         if (!is_object($out) || !is_object($out->documentElement)) {
+            Injector::inst()->get(LoggerInterface::class)->warning('SVG file not loaded: ' . $filePath);
             return false;
         }
 
@@ -224,24 +255,32 @@ class SVGTemplate extends ViewableData
         }
 
         $out->normalizeDocument();
+
         return $out->saveHTML();
     }
 
     /**
-     * @return string
+     * @return HTMLText
      */
     public function forTemplate()
     {
-
-        $path = BASE_PATH . DIRECTORY_SEPARATOR;
-        $path .= ($this->custom_base_path) ? $this->custom_base_path : $this->config()->get('base_path');
-        $path .= DIRECTORY_SEPARATOR;
-        foreach($this->subfolders as $subfolder) {
-            $path .= $subfolder . DIRECTORY_SEPARATOR;
+        // absolute svg
+        if ($this->isRemoteSvg()) {
+            return DBField::create_field('HTMLText', $this->process($this->name));
         }
-        $path .= (strpos($this->name, ".") === false) ? $this->name . '.' . $this->config()->get('extension') : $this->name;
 
-        return $this->process($path);
+        $parts = [
+            BASE_PATH,
+            $this->config()->get('base_path')
+        ];
 
+        foreach ($this->subfolders as $subfolder) {
+            $parts[] = $subfolder;
+        }
+
+        $parts[] = (strpos($this->name, ".") === false) ? $this->name . '.' . $this->config()->get('extension') : $this->name;
+        $path = Controller::join_links(array_filter($parts));
+
+        return DBField::create_field('HTMLText', $this->process($path));
     }
 }
