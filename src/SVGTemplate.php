@@ -62,12 +62,12 @@ class SVGTemplate extends ViewableData
     /**
      * @var string
      */
-    private $custom_base_path;
+    private $customBasePath;
 
     /**
      * @var array
      */
-    private $extra_classes = [];
+    private $extraClasses = [];
 
     /**
      * @var array
@@ -89,9 +89,9 @@ class SVGTemplate extends ViewableData
     {
         $this->name = $name;
         $this->id = $id;
-        $this->extra_classes = $this->config()->get('default_extra_classes') ?: [];
-        $this->extra_classes[] = 'svg-' . $this->name;
-        $this->subfolders = array();
+        $this->extraClasses = $this->config()->get('default_extra_classes') ?: [];
+        $this->extraClasses[] = 'svg-' . $this->name;
+        $this->subfolders = [];
         $this->out = new DOMDocument();
         $this->out->formatOutput = true;
     }
@@ -154,7 +154,8 @@ class SVGTemplate extends ViewableData
      */
     public function customBasePath($path)
     {
-        $this->custom_base_path = trim($path, DIRECTORY_SEPARATOR);
+        $this->customBasePath = trim($path, DIRECTORY_SEPARATOR);
+
         return $this;
     }
 
@@ -164,7 +165,8 @@ class SVGTemplate extends ViewableData
      */
     public function extraClass($class)
     {
-        $this->extra_classes[] = $class;
+        $this->extraClasses[] = $class;
+
         return $this;
     }
 
@@ -175,13 +177,18 @@ class SVGTemplate extends ViewableData
     public function addSubfolder($folder)
     {
         $this->subfolders[] = trim($folder, DIRECTORY_SEPARATOR);
+
         return $this;
     }
 
 
     public function isRemoteSvg(): bool
     {
-        if (strpos($this->name, 'https://') === 0 || strpos($this->name, 'http://') === 0 || strpos($this->name, 'data:image') === 0) {
+        if ((strpos($this->name, '://') !== false || strpos($this->name, '//') === 0)) {
+            return true;
+        }
+
+        if (strpos($this->name, 'data:image') === 0) {
             return true;
         }
 
@@ -240,8 +247,8 @@ class SVGTemplate extends ViewableData
             $root->setAttribute('height', $this->height);
         }
 
-        if ($this->extra_classes) {
-            $root->setAttribute('class', implode(' ', $this->extra_classes));
+        if ($this->extraClasses) {
+            $root->setAttribute('class', implode(' ', $this->extraClasses));
         }
 
         foreach ($out->getElementsByTagName('svg') as $element) {
@@ -269,18 +276,28 @@ class SVGTemplate extends ViewableData
             return DBField::create_field('HTMLText', $this->process($this->name));
         }
 
+        $path = $this->fullSvgPathForTemplate();
+
+        return DBField::create_field('HTMLText', $this->process($path));
+    }
+
+
+    public function fullSvgPathForTemplate()
+    {
+        $basePath = $this->customBasePath ?? $this->config()->get('base_path');
         $parts = [
             BASE_PATH,
-            $this->config()->get('base_path')
+            $basePath
         ];
 
         foreach ($this->subfolders as $subfolder) {
             $parts[] = $subfolder;
         }
 
-        $parts[] = (strpos($this->name, ".") === false) ? $this->name . '.' . $this->config()->get('extension') : $this->name;
+        $extension = $this->config()->get('extension');
+        $parts[] = (strpos($this->name, ".") === false) ? $this->name . '.' . $extension : $this->name;
         $path = Controller::join_links(array_filter($parts));
 
-        return DBField::create_field('HTMLText', $this->process($path));
+        return $path;
     }
 }
