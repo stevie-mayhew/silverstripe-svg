@@ -269,16 +269,16 @@ class SVGTemplate extends ModelData
     /**
      * @return HTMLText
      */
-    public function forTemplate()
+    public function forTemplate(): string
     {
         // absolute svg
         if ($this->isRemoteSvg()) {
-            return DBField::create_field('HTMLText', $this->process($this->name));
+            return DBField::create_field('HTMLText', $this->process($this->name))->forTemplate();
         }
 
         $path = $this->fullSvgPathForTemplate();
 
-        return DBField::create_field('HTMLText', $this->process($path));
+        return DBField::create_field('HTMLText', $this->process($path))->forTemplate();
     }
 
 
