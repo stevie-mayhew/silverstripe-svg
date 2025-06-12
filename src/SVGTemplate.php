@@ -6,13 +6,13 @@ use DOMDocument;
 use Psr\Log\LoggerInterface;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Model\ModelData;
 use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\View\ViewableData;
 
 /**
  * Class SVGTemplate
  */
-class SVGTemplate extends ViewableData
+class SVGTemplate extends ModelData
 {
     /**
      * The base path to your SVG location
@@ -269,16 +269,16 @@ class SVGTemplate extends ViewableData
     /**
      * @return HTMLText
      */
-    public function forTemplate()
+    public function forTemplate(): string
     {
         // absolute svg
         if ($this->isRemoteSvg()) {
-            return DBField::create_field('HTMLText', $this->process($this->name));
+            return DBField::create_field('HTMLText', $this->process($this->name))->forTemplate();
         }
 
         $path = $this->fullSvgPathForTemplate();
 
-        return DBField::create_field('HTMLText', $this->process($path));
+        return DBField::create_field('HTMLText', $this->process($path))->forTemplate();
     }
 
 

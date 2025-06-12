@@ -12,6 +12,6 @@ jobs:
     with:
       dynamic_matrix: false
       extra_jobs: |
-        - php: '8.1'
+        - php: '8.3'
           db: mysql80
           phpunit: true
